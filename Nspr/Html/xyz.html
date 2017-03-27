@@ -1,0 +1,53 @@
+
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title> nspr </title>
+    <link rel="stylesheet" type="text/css" href="/css/layout.css">
+    <link rel="stylesheet" type="text/css" href="/css/statistics.css">
+    <link rel="stylesheet" type="text/css" href="/css/diagram.css">
+    <link rel="stylesheet" type="text/css" href="/css/logviewer.css">
+    <link rel="stylesheet" type="text/css" href="/css/settings.css">
+  </head>
+  <body onload="initxyz()">
+    <div id="mySidenav" class="nspr-text sidenav">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <a href="#" id="navStatistics" onclick="selectContainer(this.id)">Statistics</a>
+	  <a href="#" id="navDiagram" onclick="selectContainer(this.id)">Diagram</a>
+	  <a href="#" id="navLogViewer" onclick="selectContainer(this.id)">LogViewer</a>
+	  <a href="#" id="navSettings" onclick="selectContainer(this.id)">Settings</a>
+    </div>
+    <span style="float:left;font-size:26px;cursor:pointer" onclick="openNav()">&#9776; </span>
+    <div class="statistics-container">
+		<div class="stat-nav">
+		  <ul>
+			<li class="port-nav"><a href="#" id="statNavPort" onclick="selectStat(this.id)">PORT</a></li>
+			<li class="live-nav"><a class="active" id="statNavLive" href="#" onclick="selectStat(this.id)">LIVE</a></li>
+			<li class="protocol-nav"><a href="#" id="statNavProtocol" onclick="selectStat(this.id)">PROTOCOL</a></li>
+			<li class="stream-nav"><a href="#" id="statNavStream" onclick="selectStat(this.id)">STREAM</a></li>
+		  </ul>
+		</div>
+		<div class="stat-port-area" id="stat-port"></div>
+		<div class="stat-live-area" id="stat-live"></div>
+		<div class="stat-protocol-area" id="stat-protocol"></div>
+		<div class="stat-stream-area" id="stat-stream"></div>
+    </div>
+    <div class="diagram-container">
+		<div class="data-screen-area">
+			<canvas width="2000" height="1000" id="port-screen" class="port-screen"></canvas>
+        </div>
+    </div>
+    <div class="logviewer-container">
+    </div>
+    <div class="settings-container">
+    </div>
+	<script type="text/javascript" src="/js/jquery-3.1.1.js"></script>
+	<script type="text/javascript" src="/js/xyz.js"></script>
+	<script type="text/javascript" src="/js/layout.js"></script>
+	<script type="text/javascript" src="/js/statistics.js"></script>
+	<script type="text/javascript" src="/js/diagram.js"></script>
+	<script type="text/javascript" src="/js/logviewer.js"></script>
+	<script type="text/javascript" src="/js/settings.js"></script>
+  </body>
+</html>
+
