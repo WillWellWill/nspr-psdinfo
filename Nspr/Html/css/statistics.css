@@ -110,12 +110,13 @@
 }
 
 .protocol-message {
-    background-color: #aaa;
     display: none;
+    background-color: #fff;
+    font-size: 1.3em;
 }
 
 .protocol-message span {
-	margin-left: 30%;
+	margin-left: 10%;
 }
 
 .protocol-message a {
@@ -128,6 +129,16 @@
     -webkit-user-select:none;
     -ms-user-select:none;
     user-select:none;
+}
+
+.recv-message {
+    background-color: #aaa;
+	margin-top: 1em;
+}
+
+.send-message {
+    background-color: #aaa;
+	margin-top: 0.3em;
 }
 
 

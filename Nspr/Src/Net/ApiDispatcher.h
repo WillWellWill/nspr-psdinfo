@@ -19,6 +19,8 @@ private:
 private:
     int SearchArgs(ngx_str_t a, u_char *k, size_t klen, u_char *v, size_t vlen);
 
+    int DispatcStatisticsQuery(ngx_http_request_t *r, nspr_http_response_cb cb);
+
 }; // class ApiDispatcher
 
 

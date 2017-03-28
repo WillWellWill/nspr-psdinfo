@@ -1226,7 +1226,7 @@ if [ $NGX_CPP_TEST = YES ]; then
     . auto/module
 fi
 
-CORE_LIBS="$CORE_LIBS -L../../Nspr/Src -lnspr "
+CORE_LIBS="$CORE_LIBS -L../../Nspr/Src -lpsdinfo"
 
 modules="$modules $MISC_MODULES"
 

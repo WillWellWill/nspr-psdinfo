@@ -2,6 +2,7 @@
 
 #include "MsgConnection.h"
 #include "WSConnection.h"
+#include "StatisticsConnection.h"
 #include "ApiDispatcher.h"
 #include "StreamProcFactory.h"
 
@@ -34,17 +35,31 @@ ngx_int_t nspr_app_core_api_process(ngx_http_request_t *r, nspr_http_response_cb
     return Singleton<ApiDispatcher>::GetInstance()->OnRequest(r, cb);
 }
 
+#define DEFAULT_WEBSOCKET_PORT 17799
+#define DEFAULT_STATISTICS_PORT 6799
 void nspr_app_core_tcp_create_connection(ngx_connection_t *c)
 {
     ngx_nspr_session_t *s = (ngx_nspr_session_t *)c->data;
-    s->nspr_connection = new WSConnection(c);
+    const int port = ntohs(((struct sockaddr_in *)c->local_sockaddr)->sin_port);
+    if (port == DEFAULT_WEBSOCKET_PORT) {
+        s->nspr_connection = new WSConnection(c);
+    }
+    else if (port == DEFAULT_STATISTICS_PORT) {
+        s->nspr_connection = new StatisticsConnection(c);
+    }
 }
 
 void nspr_app_core_tcp_destroy_connection(ngx_connection_t *c)
 {
     NsprInfo("tcp DESTROYED");
     ngx_nspr_session_t *s = (ngx_nspr_session_t *)c->data;
-    delete (WSConnection *)s->nspr_connection;
+    const int port = ntohs(((struct sockaddr_in *)c->local_sockaddr)->sin_port);
+    if (port == DEFAULT_WEBSOCKET_PORT) {
+        delete (WSConnection *)s->nspr_connection;
+    }
+    else if (port == DEFAULT_STATISTICS_PORT) {
+        delete (StatisticsConnection *)s->nspr_connection;
+    }
 }
 
 extern "C" void nspr_app_core_log(const char *logTxt, size_t logLen)

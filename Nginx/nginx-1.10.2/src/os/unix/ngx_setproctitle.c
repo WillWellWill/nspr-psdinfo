@@ -89,7 +89,7 @@ ngx_setproctitle(char *title)
 
     ngx_os_argv[1] = NULL;
 
-    p = ngx_cpystrn((u_char *) ngx_os_argv[0], (u_char *) "Nspr: ",
+    p = ngx_cpystrn((u_char *) ngx_os_argv[0], (u_char *) "PsdInfo: ",
                     ngx_os_argv_last - ngx_os_argv[0]);
 
     p = ngx_cpystrn(p, (u_char *) title, ngx_os_argv_last - (char *) p);

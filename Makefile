@@ -7,27 +7,27 @@ NGINX_DIR_NAME:=nginx-1.10.2
 NGINX_PATH=$(TOP)/Nginx/$(NGINX_DIR_NAME)
 NGINX_BIN:=$(NGINX_PATH)/objs/nginx
 
-NSPR_LIB:=$(TOP)/Nspr/Src/libnspr.dylib
+NSPR_LIB:=$(TOP)/Nspr/Src/libpsdinfo.so
 
 NGX_TEST_CONFIG:=$(NGINX_PATH)/objs/ngx_auto_headers.h
 
 WORKSPACE:=$(TOP)/workspace
 
-all: nginx Nspr 
+all: nginx psdinfo
 
-nginx: Nspr
+nginx: psdinfo
 	make -C $(NGINX_PATH)
 
-Nspr: $(NGX_TEST_CONFIG)
+psdinfo: $(NGX_TEST_CONFIG)
 	make -C Nspr/Src
 
 update:
 	@rm -rf $(NGINX_BIN) $(NSPR_LIB)
 
 workspace: update $(NGX_TEST_CONFIG) nginx workspace_install
-	$(shell [ -z "$(shell pgrep Nspr)" ] || killall Nspr )
-	cp $(NGINX_BIN) $(WORKSPACE)/sbin/Nspr
-	$(WORKSPACE)/sbin/Nspr
+	$(shell [ -z "$(shell pgrep PsdInfo)" ] || killall PsdInfo )
+	cp $(NGINX_BIN) $(WORKSPACE)/sbin/PsdInfo
+	$(WORKSPACE)/sbin/PsdInfo
 
 $(NGX_TEST_CONFIG):
 	cd $(NGINX_PATH); ./configure --prefix=$(WORKSPACE) --with-debug --add-module=../nginx-modules;
@@ -36,7 +36,7 @@ workspace_install: nginx
 	$(shell [ -d $(WORKSPACE) ] || mkdir $(WORKSPACE))
 	cd $(NGINX_PATH);make install
 	$(shell [ -d ${HOME}/lib ] || mkdir ${HOME}/lib )
-	cd ${HOME}/lib; ln -sf $(TOP)/Nspr/Src/libnspr.dylib libnspr.dylib
+	cd ${HOME}/lib; ln -sf $(TOP)/Nspr/Src/libpsdinfo.so libpsdinfo.so
 	cp -rf $(TOP)/Nspr/Html/* $(WORKSPACE)/html
 
 clean:

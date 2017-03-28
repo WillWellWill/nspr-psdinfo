@@ -1,6 +1,7 @@
 #include "Nspr.h"
 
 #include "ApiDispatcher.h"
+#include "StatisticsConnection.h"
 
 namespace nspr
 {
@@ -27,11 +28,12 @@ ApiDispatcher::~ApiDispatcher()
 
 int ApiDispatcher::OnRequest(ngx_http_request_t *req, nspr_http_response_cb cb)
 {
-    (void)req;
-    (void)cb;
+    const ngx_str_t uri = req->uri;
+    if (!ngx_strncmp(uri.data, "/api/statistics/query", sizeof("/api/statistics/query") - 1)) {
+        return DispatcStatisticsQuery(req, cb);
+    }
     return NGX_HTTP_OK;
 }
-    
 
 int ApiDispatcher::SearchArgs(ngx_str_t a, u_char *k, size_t klen, u_char *v, size_t vlen)
 {
@@ -49,6 +51,21 @@ int ApiDispatcher::SearchArgs(ngx_str_t a, u_char *k, size_t klen, u_char *v, si
         memcpy(v, vb, len);
     }
     return NSPR_OK;
+}
+    
+int ApiDispatcher::DispatcStatisticsQuery(ngx_http_request_t *r, nspr_http_response_cb cb)
+{
+    int len;
+    if (StatisticsConnection::GetStatisticsLen() == 0) {
+        len = snprintf((char *)m_responseStr, sizeof(m_responseStr), "{\"status\":\"not ready\", \"statistics\":{}}");
+    }
+    else {
+        len = snprintf((char *)m_responseStr, sizeof(m_responseStr), "{\"status\":\"ok\", \"statistics\":%s}", StatisticsConnection::GetStatistics());
+    }
+    m_response->buf->pos = m_responseStr;
+    m_response->buf->last = m_responseStr + len;
+    cb(r, m_response);
+    return NGX_HTTP_OK;
 }
 
 } // namespace nspr

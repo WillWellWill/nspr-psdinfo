@@ -7,6 +7,7 @@ $(MODULE).SRC := \
 				StreamConnection.cpp \
 				ApiDispatcher.cpp \
 				WSConnection.cpp \
+				StatisticsConnection.cpp \
 
 
 $(MODULE).INC := .
