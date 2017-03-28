@@ -52,7 +52,12 @@ var StatisticsProtocol = {
         content += "<br/><span>" + obj.sid + "</span>";
         content += "<span class='message-toggle' id='msg-toggle-" + obj.idx + "' onclick='StatisticsProtocol.toggleMessage(" + obj.idx + ")'>Message+</span>";
         content += "</div>";
-        content += "<div class='nspr-text protocol-item protocol-message' id='prot-msg-" + obj.idx + "'><span>AAAAA</span></div>";
+        content += "<div class='nspr-text protocol-item protocol-message' id='prot-msg-" + obj.idx + "'>";
+		content += "<a id='next-message'>0\></a>"
+		content += "<span>A</span>";
+		content += "<br/><span>B</span>";
+		content += "<br/><span>C</span>";
+		content += "</div>";
         return content;
     },
     toggleMessage : function(idx) {

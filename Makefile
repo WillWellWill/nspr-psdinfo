@@ -7,7 +7,7 @@ NGINX_DIR_NAME:=nginx-1.10.2
 NGINX_PATH=$(TOP)/Nginx/$(NGINX_DIR_NAME)
 NGINX_BIN:=$(NGINX_PATH)/objs/nginx
 
-NSPR_LIB:=$(TOP)/Nspr/Src/libnspr.so
+NSPR_LIB:=$(TOP)/Nspr/Src/libnspr.dylib
 
 NGX_TEST_CONFIG:=$(NGINX_PATH)/objs/ngx_auto_headers.h
 
@@ -36,7 +36,7 @@ workspace_install: nginx
 	$(shell [ -d $(WORKSPACE) ] || mkdir $(WORKSPACE))
 	cd $(NGINX_PATH);make install
 	$(shell [ -d ${HOME}/lib ] || mkdir ${HOME}/lib )
-	cd ${HOME}/lib; ln -sf $(TOP)/Nspr/Src/libnspr.so libnspr.so
+	cd ${HOME}/lib; ln -sf $(TOP)/Nspr/Src/libnspr.dylib libnspr.dylib
 	cp -rf $(TOP)/Nspr/Html/* $(WORKSPACE)/html
 
 clean:

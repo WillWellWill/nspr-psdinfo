@@ -17,7 +17,6 @@ OBJ_TOP_DIR := $(BUILD_DIR)/obj
 OBJ_DIRS := $(foreach srcdir, $(SRC_DIRS), $(OBJ_TOP_DIR)/$(srcdir))
 
 CPPFLAGS += -I $(OBJ_TOP_DIR)
-CPPFLAGS += -I /opt/Code/ffmpegDev/include
 
 .PHONY: preobj clean
 
@@ -26,7 +25,7 @@ OBJS = $(patsubst %.cpp, $(OBJ_TOP_DIR)/%.o, $(SRC_PATHS))
 endif
 
 
-TARGET := libnspr.so
+TARGET := libnspr.dylib
 
 all: preobj $(TARGET)
 

@@ -114,3 +114,20 @@
     display: none;
 }
 
+.protocol-message span {
+	margin-left: 30%;
+}
+
+.protocol-message a {
+    color: #00f;
+	position: absolute;
+	margin-top: 1em;
+	margin-left: 2em;
+	cursor: pointer;
+    -moz-user-select:none;
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+
+

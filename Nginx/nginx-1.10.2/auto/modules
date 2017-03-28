@@ -1226,9 +1226,7 @@ if [ $NGX_CPP_TEST = YES ]; then
     . auto/module
 fi
 
-CORE_LIBS="$CORE_LIBS -L../../Nspr/Src -lnspr"
-CORE_LIBS="$CORE_LIBS -lopencv_highgui -lopencv_core -lopencv_video -lopencv_imgproc"
-CORE_LIBS="$CORE_LIBS -L/opt/Code/ffmpegDev/lib -lavformat -lavcodec -lavdevice -lavfilter -lavutil -lswresample -lswscale -lsqlite3"
+CORE_LIBS="$CORE_LIBS -L../../Nspr/Src -lnspr "
 
 modules="$modules $MISC_MODULES"
 
