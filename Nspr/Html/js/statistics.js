@@ -11,9 +11,11 @@ var selectStat = function(id) {
     $("#" + id).addClass("active");
     if (id == "statNavPort") {
         $(".stat-port-area").css("display", "block");
+        InitStatisticsPort();
     }
     else if (id == "statNavLive") {
         $(".stat-live-area").css("display", "block");
+        InitStatisticsLive();
     }
     else if (id == "statNavProtocol") {
         $(".stat-protocol-area").css("display", "block");
@@ -21,6 +23,7 @@ var selectStat = function(id) {
     }
     else if (id == "statNavStream") {
         $(".stat-stream-area").css("display", "block");
+        InitStreamProtocol();
     }
 };
 
@@ -28,6 +31,16 @@ var InitStatisticsProtocol = function() {
     var protocol = {};
     ApiDispatchNetwork.sendRequest("/api/statistics/query", StatisticsProtocol.onResponse);
 };
+var InitStatisticsPort = function() {
+    var protocol = {};
+    ApiDispatchNetwork.sendRequest("/api/statistics/query", StatisticsPort.onResponse);
+};
+var InitStatisticsLive = function() {
+    var protocol = {};
+    ApiDispatchNetwork.sendRequest("/api/statistics/query", StatisticsLive.onResponse);
+};
+var InitStatisticsStream = function() {
+}
 
 var StatisticsProtocol = {
     constructItem : function(obj) {
@@ -106,6 +119,94 @@ var StatisticsProtocol = {
         console.log(idx);
         var item = StatisticsProtocol.constructItem(protocol);
         $("#stat-protocol").append(item);
+    }
+};
+
+var StatisticsPort = {
+    constructItem : function(obj) {
+        var content =   
+                "<div class='nspr-text protocol-item'>"+
+                "  <span>start:@time</span>"+
+                "  <span>virtualport:@virtualport</span>"+
+                "  <span>agent:@isagent</span>"+
+                "  <br/><span>videoport:@videoport</span>"+
+                "  <span>audioport:@audioport</span>"+
+                "  <br/><span>liveid:@liveid</span>"+
+                "</div>";
+        console.log(content);
+        content = content.replace(/@time/g, obj.starttime);
+        content = content.replace(/@virtualport/g, obj.virtualport);
+        content = content.replace(/@isagent/g, obj.isagent ? "true" : "false");
+        content = content.replace(/@videoport/g, obj.videoport);
+        content = content.replace(/@audioport/g, obj.audioport);
+        content = content.replace(/@liveid/g, obj.liveid);
+
+        return content;
+    },
+    onResponse : function(response) {
+        var obj = JSON.parse(response);
+        if (!obj['status'] || obj['status'] != 'ok') {
+            console.log("status of statistics not ok");
+            return;
+        }
+        $("#stat-port").empty();
+        
+        if (!obj.statistics) {
+            console.log("statistics not ready");
+            return;
+        }
+
+        for (idx in obj.statistics) {
+            if (obj.statistics[idx].type == "port") {
+                StatisticsPort.handlePort(obj.statistics[idx], idx);
+            }
+        }
+    },
+    handlePort : function(port, idx) {
+        var item = StatisticsPort.constructItem(port);
+        $("#stat-port").append(item);
+    }
+};
+
+var StatisticsLive = {
+    constructItem : function(obj) {
+        var content =   
+                "<div class='nspr-text protocol-item'>"+
+                "  <span>start:@time</span>"+
+                "  <span>liveid:@liveid</span>"+
+                "  <span>virtualport:@virtualport</span>"+
+                "  <br/><span>sid:@sid</span>"+
+                "</div>";
+        console.log(content);
+        content = content.replace(/@time/g, obj.starttime);
+        content = content.replace(/@liveid/g, obj.liveid);
+        content = content.replace(/@virtualport/g, obj.virtualport);
+        content = content.replace(/@sid/g, obj.sid);
+
+        return content;
+    },
+    onResponse : function(response) {
+        var obj = JSON.parse(response);
+        if (!obj['status'] || obj['status'] != 'ok') {
+            console.log("status of statistics not ok");
+            return;
+        }
+        $("#stat-live").empty();
+        
+        if (!obj.statistics) {
+            console.log("statistics not ready");
+            return;
+        }
+
+        for (idx in obj.statistics) {
+            if (obj.statistics[idx].type == "live") {
+                StatisticsLive.handleLive(obj.statistics[idx], idx);
+            }
+        }
+    },
+    handleLive : function(live, idx) {
+        var item = StatisticsLive.constructItem(live);
+        $("#stat-live").append(item);
     }
 };
 
