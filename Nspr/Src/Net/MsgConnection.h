@@ -25,7 +25,7 @@ public:
 
 private:
     static const int m_maxUrlLen = 1024;
-    static const int m_maxRecvBufLen = 4096;
+    static const int m_maxRecvBufLen = 4096 * 1024;
     u_char m_url[m_maxUrlLen];
 
     ngx_connection_t *m_c;
