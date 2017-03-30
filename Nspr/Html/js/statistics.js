@@ -23,7 +23,7 @@ var selectStat = function(id) {
     }
     else if (id == "statNavStream") {
         $(".stat-stream-area").css("display", "block");
-        InitStreamProtocol();
+        InitStatisticsStream();
     }
 };
 
@@ -40,6 +40,8 @@ var InitStatisticsLive = function() {
     ApiDispatchNetwork.sendRequest("/api/statistics/query", StatisticsLive.onResponse);
 };
 var InitStatisticsStream = function() {
+    var protocol = {};
+    ApiDispatchNetwork.sendRequest("/api/statistics/query", StatisticsStream.onResponse);
 }
 
 var StatisticsProtocol = {
@@ -207,6 +209,71 @@ var StatisticsLive = {
     handleLive : function(live, idx) {
         var item = StatisticsLive.constructItem(live);
         $("#stat-live").append(item);
+    }
+};
+
+var StatisticsStream = {
+    constructItem : function(obj) {
+        var content =   
+                        "<div class='nspr-text protocol-item'>"+
+                        "  <span>start:@time</span>"+
+                        "  <span>virtualport:@virtualport</span>";
+        if (obj.ispublish == 0) {
+            content +=  "  <br/>";
+            content +=   "  <span class='media-proc'>Publish</span>"+
+                        "  <span>@retransbitrate/@retransbytes</span>"+
+                        "  <span class='media-proc'>Retransmission</span>"+
+                        "  <span>@relaybitrate/@relaybytes</span>"+
+                        "  <span class='media-proc'>Relay</span>";
+        }
+        content +=       "</div>";
+        console.log(content);
+        content = content.replace(/@time/g, obj.starttime);
+        content = content.replace(/@virtualport/g, obj.virtualport);
+        
+        var retransbitrate = 0, retransbytes = 0;
+        var relaybitrate = 0, relaybytes = 0;
+        for (var i = 0; i < obj.proccount; i++) {
+            var name = obj.procdesc[i].name;
+            if (name == "relay") {
+                relaybitrate = obj.procdesc[i].bitrate;
+                relaybytes = obj.procdesc[i].totalbytes;
+            }
+            else if (name == "retransmission") {
+                retransbitrate = obj.procdesc[i].bitrate;
+                retransbytes = obj.procdesc[i].totalbytes;
+            }
+        }
+
+        content = content.replace(/@retransbitrate/g, retransbitrate);
+        content = content.replace(/@retransbytes/g, retransbytes);
+        content = content.replace(/@relaybitrate/g, relaybitrate);
+        content = content.replace(/@relaybytes/g, relaybytes);
+
+        return content;
+    },
+    onResponse : function(response) {
+        var obj = JSON.parse(response);
+        if (!obj['status'] || obj['status'] != 'ok') {
+            console.log("status of statistics not ok");
+            return;
+        }
+        $("#stat-stream").empty();
+        
+        if (!obj.statistics) {
+            console.log("statistics not ready");
+            return;
+        }
+
+        for (idx in obj.statistics) {
+            if (obj.statistics[idx].type == "stream") {
+                StatisticsStream.handleStream(obj.statistics[idx], idx);
+            }
+        }
+    },
+    handleStream : function(stream, idx) {
+        var item = StatisticsStream.constructItem(stream);
+        $("#stat-stream").append(item);
     }
 };
 
